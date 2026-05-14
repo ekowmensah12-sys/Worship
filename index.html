@@ -7,204 +7,152 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      /* Light warm grey — clear contrast, not white, not dark */
-      background: #F0EDE6 !important;
-      color: #1a1a1a;
-      font-family: 'Source Sans 3', sans-serif;
-      min-height: 100vh;
-    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{background:#F0EDE6!important;color:#1a1a1a;font-family:'Source Sans 3',sans-serif;min-height:100vh;}
 
     /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, #6B4F0A 0%, #9A7010 25%, #C49A14 50%, #9A7010 75%, #6B4F0A 100%);
-      padding: 32px 24px 26px;
-      text-align: center;
-      position: relative;
-    }
-    header::before {
-      content: ''; position: absolute; inset: 0;
-      background: repeating-linear-gradient(-55deg,
-        rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px,
-        transparent 1px, transparent 14px);
-    }
-    header::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 5px;
-      background: linear-gradient(90deg, #3D2D04, #C49A14, #F0C840, #C49A14, #3D2D04);
-    }
-    .church-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(26px, 5.5vw, 46px); font-weight: 700;
-      color: #FFF8E7; letter-spacing: 0.07em;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.45); position: relative;
-    }
-    .church-sub {
-      font-size: 11px; font-weight: 400; letter-spacing: 0.32em;
-      text-transform: uppercase; color: rgba(255,240,190,0.8);
-      margin-top: 5px; position: relative;
-    }
-    .month-pill {
-      display: inline-block; margin-top: 14px; padding: 6px 26px;
-      background: rgba(0,0,0,0.25); border: 1.5px solid rgba(255,220,100,0.5);
-      border-radius: 30px; font-family: 'Cormorant Garamond', serif;
-      font-size: 16px; font-weight: 600; color: #FFF0C0;
-      letter-spacing: 0.14em; text-transform: uppercase; position: relative;
-    }
+    header{background:linear-gradient(135deg,#6B4F0A 0%,#9A7010 25%,#C49A14 50%,#9A7010 75%,#6B4F0A 100%);padding:28px 24px 22px;text-align:center;position:relative;}
+    header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-55deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 14px);}
+    header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#3D2D04,#C49A14,#F0C840,#C49A14,#3D2D04);}
+    .church-name{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,5vw,44px);font-weight:700;color:#FFF8E7;letter-spacing:0.07em;text-shadow:0 2px 10px rgba(0,0,0,0.45);position:relative;}
+    .church-sub{font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(255,240,190,0.8);margin-top:4px;position:relative;}
+
+    /* Month dropdown */
+    .month-wrap{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:5px 16px 5px 20px;background:rgba(0,0,0,0.25);border:1.5px solid rgba(255,220,100,0.5);border-radius:30px;position:relative;cursor:pointer;}
+    .month-wrap select{appearance:none;-webkit-appearance:none;background:transparent;border:none;outline:none;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#FFF0C0;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;padding-right:4px;}
+    .month-wrap select option{background:#8a6010;color:#fff;font-size:14px;letter-spacing:0;}
+    .month-arrow{color:#FFF0C0;font-size:11px;pointer-events:none;}
 
     /* ── TABS ── */
-    .tabs-bar {
-      background: #E8E4DC;
-      border-bottom: 2px solid #CCC6BA;
-      display: flex; justify-content: center;
-    }
-    .tab-btn {
-      padding: 15px 38px; font-family: 'Cormorant Garamond', serif;
-      font-size: 17px; font-weight: 600; letter-spacing: 0.04em;
-      border: none; background: transparent; color: #999;
-      cursor: pointer; border-bottom: 3px solid transparent;
-      margin-bottom: -2px; transition: color 0.2s, border-color 0.2s;
-    }
-    .tab-btn:hover { color: #444; }
-    .tab-btn.act-worship { color: #1a5c38; border-bottom-color: #1a5c38; }
-    .tab-btn.act-praise  { color: #8b2020; border-bottom-color: #8b2020; }
-    .tab-btn.act-solos   { color: #2a4f8a; border-bottom-color: #2a4f8a; }
+    .tabs-bar{background:#E8E4DC;border-bottom:2px solid #CCC6BA;display:flex;justify-content:center;flex-wrap:wrap;}
+    .tab-btn{padding:13px 32px;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:0.04em;border:none;background:transparent;color:#999;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;}
+    .tab-btn:hover{color:#444;}
+    .tab-btn.act-prayer {color:#7a4f00;border-bottom-color:#7a4f00;}
+    .tab-btn.act-worship{color:#1a5c38;border-bottom-color:#1a5c38;}
+    .tab-btn.act-praise {color:#8b2020;border-bottom-color:#8b2020;}
 
     /* ── LAYOUT ── */
-    .page { max-width: 820px; margin: 0 auto; padding: 28px 20px 90px; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+    .page{max-width:820px;margin:0 auto;padding:26px 20px 90px;}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
 
-    .section-head {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 20px; padding-bottom: 13px;
-      border-bottom: 1.5px solid #CCC6BA;
-    }
-    .section-head h2 {
-      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700;
-    }
-    .worship-panel .section-head h2 { color: #1a5c38; }
-    .praise-panel  .section-head h2 { color: #8b2020; }
-    .solos-panel   .section-head h2 { color: #2a4f8a; }
-    .section-icon {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 17px; flex-shrink: 0;
-    }
-    .worship-panel .section-icon { background: #c8e4d0; border: 1px solid #8ec8a8; }
-    .praise-panel  .section-icon { background: #e8cece; border: 1px solid #c09898; }
-    .solos-panel   .section-icon { background: #ccd8f0; border: 1px solid #90a8d8; }
+    /* ── SECTION HEADER ── */
+    .section-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:1.5px solid #CCC6BA;}
+    .section-head h2{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:700;}
+    .prayer-panel  .section-head h2{color:#7a4f00;}
+    .worship-panel .section-head h2{color:#1a5c38;}
+    .praise-panel  .section-head h2{color:#8b2020;}
+    .section-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .prayer-panel  .section-icon{background:#f5e6c8;border:1px solid #d4aa70;}
+    .worship-panel .section-icon{background:#c8e4d0;border:1px solid #8ec8a8;}
+    .praise-panel  .section-icon{background:#e8cece;border:1px solid #c09898;}
 
-    /* ── SONG CARDS ── */
-    .songs-table { display: flex; flex-direction: column; gap: 14px; }
-    .song-row {
-      background: #FAFAF7;
-      border: 1px solid #C8C2B4;
-      border-radius: 10px; padding: 18px 18px 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-    .row-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .song-num {
-      width: 30px; height: 30px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 15px; font-weight: 700; flex-shrink: 0;
-    }
-    .worship-panel .song-num { background: #c8e4d0; color: #1a5c38; border: 1.5px solid #8ec8a8; }
-    .praise-panel  .song-num { background: #e8cece; color: #8b2020; border: 1.5px solid #c09898; }
-    .solos-panel   .song-num { background: #ccd8f0; color: #2a4f8a; border: 1.5px solid #90a8d8; }
+    /* ── ADD BUTTON ── */
+    .add-btn{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;transition:filter .18s;}
+    .prayer-panel  .add-btn{background:#f5e6c8;color:#7a4f00;border:1px solid #d4aa70;}
+    .worship-panel .add-btn{background:#c8e4d0;color:#1a5c38;border:1px solid #8ec8a8;}
+    .praise-panel  .add-btn{background:#e8cece;color:#8b2020;border:1px solid #c09898;}
+    .add-btn:hover{filter:brightness(0.92);}
 
-    .field-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.22em;
-      text-transform: uppercase; color: #999; margin-bottom: 5px;
-    }
-    input[type="text"], input[type="url"] {
-      width: 100%; padding: 9px 12px; border: 1.5px solid #C0B8A8;
-      border-radius: 7px; font-family: 'Source Sans 3', sans-serif;
-      font-size: 14.5px; color: #1a1a1a; background: #F5F2EC;
-      transition: border-color 0.18s, background 0.18s; outline: none;
-    }
-    input:focus { background: #fff !important; }
-    .worship-panel input:focus { border-color: #1a5c38 !important; }
-    .praise-panel  input:focus { border-color: #8b2020 !important; }
-    .solos-panel   input:focus { border-color: #2a4f8a !important; }
-    input::placeholder { color: #B0A890; }
+    /* ── CARDS ── */
+    .items-list{display:flex;flex-direction:column;gap:14px;}
+    .card{background:#FAFAF7;border:1px solid #C8C2B4;border-radius:10px;padding:16px 16px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);position:relative;}
 
-    .row-bottom { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
-    .yt-wrap { position: relative; }
-    .yt-icon {
-      position: absolute; left: 10px; top: 50%;
-      transform: translateY(-50%); width: 18px; height: 18px; pointer-events: none;
-    }
-    .yt-wrap input { padding-left: 34px; }
+    /* ── DELETE BTN ── */
+    .del-btn{position:absolute;top:11px;right:11px;width:24px;height:24px;border-radius:50%;border:1px solid #DDD;background:#F5F0E8;color:#bbb;font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+    .del-btn:hover{background:#ffe0e0;border-color:#f0aaaa;color:#cc3333;}
 
-    .instr-box { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
-    .instr-box .field-label { text-align: center; }
-    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
-    .toggle-track {
-      width: 46px; height: 26px; border-radius: 13px; background: #C0B8A8;
-      position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
-    }
-    .worship-panel .toggle-track.on { background: #1a5c38; }
-    .praise-panel  .toggle-track.on { background: #8b2020; }
-    .solos-panel   .toggle-track.on { background: #2a4f8a; }
-    .toggle-thumb {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-      position: absolute; top: 3px; left: 3px; transition: left 0.2s;
-    }
-    .toggle-track.on .toggle-thumb { left: 23px; }
-    .toggle-label { font-size: 12px; font-weight: 700; color: #999; min-width: 24px; }
-    .worship-panel .toggle-track.on ~ .toggle-label { color: #1a5c38; }
-    .praise-panel  .toggle-track.on ~ .toggle-label { color: #8b2020; }
-    .solos-panel   .toggle-track.on ~ .toggle-label { color: #2a4f8a; }
+    /* ── ITEM NUMBER ── */
+    .item-num{width:28px!important;height:28px!important;min-width:28px!important;min-height:28px!important;max-width:28px!important;max-height:28px!important;border-radius:50%!important;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:700;flex-shrink:0;flex-grow:0;line-height:1;overflow:hidden;}
+    .prayer-panel  .item-num{background:#f5e6c8;color:#7a4f00;border:1.5px solid #d4aa70;}
+    .worship-panel .item-num{background:#c8e4d0;color:#1a5c38;border:1.5px solid #8ec8a8;}
+    .praise-panel  .item-num{background:#e8cece;color:#8b2020;border:1.5px solid #c09898;}
 
-    .lyrics-toggle-row { margin-top: 11px; }
-    .lyrics-toggle-btn {
-      font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      background: #E8E4DC; border: 1px solid #C8C2B4; border-radius: 20px;
-      padding: 4px 14px; cursor: pointer; color: #999; transition: all 0.18s;
-    }
-    .lyrics-toggle-btn:hover { background: #DDD8CE; color: #444; }
-    .worship-panel .lyrics-toggle-btn.open { background: #c8e4d0; color: #1a5c38; border-color: #8ec8a8; }
-    .praise-panel  .lyrics-toggle-btn.open { background: #e8cece; color: #8b2020; border-color: #c09898; }
-    .solos-panel   .lyrics-toggle-btn.open { background: #ccd8f0; color: #2a4f8a; border-color: #90a8d8; }
+    /* ── FIELD LABEL ── */
+    .field-label{font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#999;margin-bottom:4px;}
 
-    .lyrics-area { display: none; margin-top: 10px; }
-    .lyrics-area.open { display: block; }
-    .lyrics-area textarea {
-      width: 100%; min-height: 130px; padding: 10px 12px;
-      border: 1.5px solid #C0B8A8; border-radius: 7px;
-      font-family: 'Source Sans 3', sans-serif; font-size: 13.5px;
-      line-height: 1.78; color: #2a2a2a; background: #F5F2EC;
-      resize: vertical; outline: none; transition: border-color 0.18s;
-    }
-    .worship-panel .lyrics-area textarea:focus { border-color: #1a5c38; }
-    .praise-panel  .lyrics-area textarea:focus { border-color: #8b2020; }
-    .solos-panel   .lyrics-area textarea:focus { border-color: #2a4f8a; }
-    .lyrics-area textarea::placeholder { color: #B0A890; }
+    /* ── INPUTS ── */
+    input[type="text"],input[type="url"]{width:100%;padding:8px 11px;border:1.5px solid #C0B8A8;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:14px;color:#1a1a1a;background:#F5F2EC;outline:none;transition:border-color .18s,background .18s;}
+    input:focus{background:#fff!important;}
+    .prayer-panel  input:focus{border-color:#7a4f00!important;}
+    .worship-panel input:focus{border-color:#1a5c38!important;}
+    .praise-panel  input:focus{border-color:#8b2020!important;}
+    input::placeholder{color:#B0A890;}
+
+    /* ── PRAYER CARD ── */
+    .prayer-card .p-card-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;padding-right:34px;}
+    .prayer-card .p-card-top>div:last-child{flex:1;}
+
+    /* YouTube row */
+    .yt-wrap{position:relative;}
+    .yt-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:17px;height:17px;pointer-events:none;}
+    .yt-wrap input{padding-left:32px;}
+
+    /* ── POINTS & SCRIPTURES ── */
+    .sub-section{margin-top:14px;}
+    .sub-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+    .sub-section-label{font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;}
+    .prayer-panel .sub-section-label{color:#7a4f00;}
+    .worship-panel .sub-section-label{color:#1a5c38;}
+    .praise-panel .sub-section-label{color:#8b2020;}
+
+    .sub-add-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:16px;font-size:10.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;border:none;transition:filter .18s;}
+    .prayer-panel  .sub-add-btn{background:#f5e6c8;color:#7a4f00;border:1px solid #d4aa70;}
+    .worship-panel .sub-add-btn{background:#c8e4d0;color:#1a5c38;border:1px solid #8ec8a8;}
+    .praise-panel  .sub-add-btn{background:#e8cece;color:#8b2020;border:1px solid #c09898;}
+    .sub-add-btn:hover{filter:brightness(0.9);}
+
+    .sub-items{display:flex;flex-direction:column;gap:6px;}
+    /* Paired point+scripture */
+    .pairs-list{display:flex;flex-direction:column;gap:10px;}
+    .pair-group{background:#F5F0E6;border:1px solid #DDD5C0;border-radius:8px;padding:10px 12px;position:relative;}
+    .pair-del-btn{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;border:1px solid #DDD;background:#F5F0E8;color:#bbb;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
+    .pair-del-btn:hover{background:#ffe0e0;border-color:#f0aaaa;color:#cc3333;}
+    .pair-row{margin-bottom:8px;}
+    .pair-row:last-child{margin-bottom:0;}
+    .pair-inner-label{font-size:9.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:3px;}
+    .prayer-panel .pair-inner-label.point-lbl{color:#7a4f00;}
+    .prayer-panel .pair-inner-label.script-lbl{color:#4a6090;}
+    .sub-item{display:flex;align-items:center;gap:8px;}
+    .sub-item input{flex:1;}
+    .sub-del-btn{width:22px;height:22px;border-radius:50%;border:1px solid #DDD;background:#F5F0E8;color:#bbb;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
+    .sub-del-btn:hover{background:#ffe0e0;border-color:#f0aaaa;color:#cc3333;}
+
+    /* ── SONG CARD ── */
+    .song-card .row-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-right:34px;}
+    .song-card .row-top>div:last-child{flex:1;}
+    .song-card .row-bottom{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;}
+    .instr-box{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+    .instr-box .field-label{text-align:center;}
+    .toggle-wrap{display:flex;align-items:center;gap:7px;}
+    .toggle-track{width:42px;height:24px;border-radius:12px;background:#C0B8A8;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+    .worship-panel .toggle-track.on{background:#1a5c38;}
+    .praise-panel  .toggle-track.on{background:#8b2020;}
+    .toggle-thumb{width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);position:absolute;top:3px;left:3px;transition:left .2s;}
+    .toggle-track.on .toggle-thumb{left:21px;}
+    .toggle-label{font-size:11px;font-weight:700;color:#999;min-width:22px;}
+    .worship-panel .toggle-track.on~.toggle-label{color:#1a5c38;}
+    .praise-panel  .toggle-track.on~.toggle-label{color:#8b2020;}
+    .lyrics-toggle-row{margin-top:10px;}
+    .lyrics-toggle-btn{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:#E8E4DC;border:1px solid #C8C2B4;border-radius:20px;padding:4px 13px;cursor:pointer;color:#999;transition:all .18s;}
+    .lyrics-toggle-btn:hover{background:#DDD8CE;color:#444;}
+    .worship-panel .lyrics-toggle-btn.open{background:#c8e4d0;color:#1a5c38;border-color:#8ec8a8;}
+    .praise-panel  .lyrics-toggle-btn.open{background:#e8cece;color:#8b2020;border-color:#c09898;}
+    .lyrics-area{display:none;margin-top:10px;}
+    .lyrics-area.open{display:block;}
+    .lyrics-area textarea{width:100%;min-height:110px;padding:8px 11px;border:1.5px solid #C0B8A8;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:13.5px;line-height:1.75;color:#2a2a2a;background:#F5F2EC;resize:vertical;outline:none;transition:border-color .18s;}
+    .worship-panel .lyrics-area textarea:focus{border-color:#1a5c38;}
+    .praise-panel  .lyrics-area textarea:focus{border-color:#8b2020;}
+    .lyrics-area textarea::placeholder{color:#B0A890;}
 
     /* ── EXPORT BAR ── */
-    .export-bar {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #E8E4DC; border-top: 2px solid #CCC6BA;
-      padding: 13px 24px; display: flex;
-      justify-content: flex-end; align-items: center; gap: 12px;
-      z-index: 100; box-shadow: 0 -3px 14px rgba(0,0,0,0.10);
-    }
-    .export-hint { font-size: 12.5px; color: #888; margin-right: auto; font-weight: 600; }
-    .btn-export {
-      display: inline-flex; align-items: center; gap: 8px; padding: 10px 26px;
-      background: linear-gradient(135deg, #6B4F0A, #9A7010, #C49A14);
-      color: #FFF8E7; font-family: 'Source Sans 3', sans-serif;
-      font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
-      border: none; border-radius: 8px; cursor: pointer;
-      box-shadow: 0 2px 10px rgba(80,55,0,0.35);
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .btn-export:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(80,55,0,0.45); }
-    .btn-export:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .export-bar{position:fixed;bottom:0;left:0;right:0;background:#E8E4DC;border-top:2px solid #CCC6BA;padding:12px 24px;display:flex;justify-content:flex-end;align-items:center;gap:12px;z-index:100;box-shadow:0 -3px 14px rgba(0,0,0,0.10);}
+    .export-hint{font-size:12px;color:#888;margin-right:auto;font-weight:600;}
+    .save-indicator{font-size:11px;color:#1a5c38;font-weight:700;letter-spacing:0.08em;opacity:0;transition:opacity .4s;}
+    .save-indicator.show{opacity:1;}
+    .btn-export{display:inline-flex;align-items:center;gap:7px;padding:9px 22px;background:linear-gradient(135deg,#6B4F0A,#9A7010,#C49A14);color:#FFF8E7;font-family:'Source Sans 3',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;border:none;border-radius:8px;cursor:pointer;box-shadow:0 2px 10px rgba(80,55,0,0.3);transition:transform .15s,box-shadow .15s;}
+    .btn-export:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(80,55,0,0.42);}
+    .btn-export:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
   </style>
 </head>
 <body>
@@ -212,307 +160,532 @@
 <header>
   <div class="church-name">Go Ye Amsterdam</div>
   <div class="church-sub">Worship Department &nbsp;·&nbsp; Song Database</div>
-  <div class="month-pill">May 2026</div>
+  <div class="month-wrap">
+    <select id="monthSelect" onchange="changeMonth()">
+      <option>January</option><option>February</option><option>March</option>
+      <option>April</option><option selected>May</option><option>June</option>
+      <option>July</option><option>August</option><option>September</option>
+      <option>October</option><option>November</option><option>December</option>
+    </select>
+    <span class="month-arrow">▾</span>
+  </div>
 </header>
 
 <div class="tabs-bar">
-  <button class="tab-btn act-worship" id="btn-worship" onclick="switchTab('worship')">🕊 Worship</button>
-  <button class="tab-btn" id="btn-praise" onclick="switchTab('praise')">🎺 Praise</button>
-  <button class="tab-btn" id="btn-solos" onclick="switchTab('solos')">🎤 Solos</button>
+  <button class="tab-btn act-prayer"  id="btn-prayer"  onclick="switchTab('prayer')">🙏 Prayer</button>
+  <button class="tab-btn"             id="btn-worship" onclick="switchTab('worship')">🕊 Worship</button>
+  <button class="tab-btn"             id="btn-praise"  onclick="switchTab('praise')">🎺 Praise</button>
 </div>
 
 <div class="page">
-  <div id="panel-worship" class="tab-panel worship-panel active">
+
+  <!-- PRAYER -->
+  <div id="panel-prayer" class="tab-panel prayer-panel active">
+    <div class="section-head">
+      <div class="section-icon">🙏</div>
+      <h2 id="prayer-heading">Prayer</h2>
+      <button class="add-btn" onclick="addPrayerCard()">+ Add Section</button>
+    </div>
+    <div class="items-list" id="prayer-list"></div>
+    <div style="margin-top:14px;text-align:center;">
+      <button class="add-btn" onclick="addPrayerCard()" style="margin:0 auto;">+ Add Another Section</button>
+    </div>
+  </div>
+
+  <!-- WORSHIP -->
+  <div id="panel-worship" class="tab-panel worship-panel">
     <div class="section-head">
       <div class="section-icon">🕊</div>
-      <h2>Worship Songs — May 2026</h2>
+      <h2 id="worship-heading">Worship Songs</h2>
+      <button class="add-btn" onclick="addSongCard('worship')">+ Add Song</button>
     </div>
-    <div class="songs-table" id="worship-rows"></div>
+    <div class="items-list" id="worship-list"></div>
+    <div style="margin-top:14px;text-align:center;">
+      <button class="add-btn" onclick="addSongCard('worship')" style="margin:0 auto;">+ Add Another Song</button>
+    </div>
   </div>
+
+  <!-- PRAISE -->
   <div id="panel-praise" class="tab-panel praise-panel">
     <div class="section-head">
       <div class="section-icon">🎺</div>
-      <h2>Praise Songs — May 2026</h2>
+      <h2 id="praise-heading">Praise Songs</h2>
+      <button class="add-btn" onclick="addSongCard('praise')">+ Add Song</button>
     </div>
-    <div class="songs-table" id="praise-rows"></div>
-  </div>
-  <div id="panel-solos" class="tab-panel solos-panel">
-    <div class="section-head">
-      <div class="section-icon">🎤</div>
-      <h2>Solos — May 2026</h2>
+    <div class="items-list" id="praise-list"></div>
+    <div style="margin-top:14px;text-align:center;">
+      <button class="add-btn" onclick="addSongCard('praise')" style="margin:0 auto;">+ Add Another Song</button>
     </div>
-    <div class="songs-table" id="solos-rows"></div>
   </div>
+
 </div>
 
 <div class="export-bar">
-  <span class="export-hint">Fill in your songs, then export for your team</span>
+  <span class="export-hint">Auto-saved · Export for your team</span>
+  <span class="save-indicator" id="saveInd">✓ Saved</span>
   <button class="btn-export" id="exportBtn" onclick="exportPDF()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
-    Export as PDF
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
+    Export PDF
   </button>
 </div>
 
 <script>
+// ─── ICONS ────────────────────────────────────────────────────────────────────
 const YT_SVG = `<svg class="yt-icon" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>`;
 
-function buildRows(count, containerId) {
-  const el = document.getElementById(containerId);
-  let html = '';
-  for (let i = 1; i <= count; i++) {
-    const id = containerId + '-' + i;
-    html += `
-    <div class="song-row">
-      <div class="row-top">
-        <div class="song-num">${i}</div>
-        <div style="flex:1">
-          <div class="field-label">Song Title</div>
-          <input type="text" id="title-${id}" placeholder="Enter song title…" autocomplete="off"/>
-        </div>
+// ─── STORAGE KEY ──────────────────────────────────────────────────────────────
+const BASE_KEY = 'goye_amsterdam_';
+function storeKey() { return BASE_KEY + currentMonth().replace(' ','_'); }
+
+function currentMonth() {
+  return document.getElementById('monthSelect')?.value || 'May';
+}
+
+// ─── DEFAULT STATE ────────────────────────────────────────────────────────────
+function makeDefaultState() {
+  return {
+    prayer:  Array.from({length:4}, (_,i) => makePrayerItem()),
+    worship: Array.from({length:4}, (_,i) => makeSongItem()),
+    praise:  Array.from({length:4}, (_,i) => makeSongItem()),
+  };
+}
+
+function makePrayerItem() {
+  return { id:uid(), title:'', yt:'', instr_yt:'', pairs:[{point:'',scripture:''}] };
+}
+function makeSongItem() {
+  return { id:uid(), title:'', yt:'' };
+}
+
+// ─── SAVE / LOAD ──────────────────────────────────────────────────────────────
+function loadState() {
+  try {
+    const raw = localStorage.getItem(storeKey());
+    return raw ? JSON.parse(raw) : makeDefaultState();
+  } catch { return makeDefaultState(); }
+}
+
+function saveState() {
+  localStorage.setItem(storeKey(), JSON.stringify(collectState()));
+  const ind = document.getElementById('saveInd');
+  ind.classList.add('show');
+  clearTimeout(ind._t);
+  ind._t = setTimeout(() => ind.classList.remove('show'), 1800);
+}
+
+let _saveTimer;
+function scheduleSave() { clearTimeout(_saveTimer); _saveTimer = setTimeout(saveState, 500); }
+
+// ─── COLLECT STATE FROM DOM ───────────────────────────────────────────────────
+function collectState() {
+  return {
+    prayer:  collectPrayer(),
+    worship: collectSongs('worship'),
+    praise:  collectSongs('praise'),
+  };
+}
+
+function collectPrayer() {
+  return [...document.querySelectorAll('#prayer-list .prayer-card')].map(c => ({
+    id:       c.dataset.id,
+    title:    c.querySelector('.p-title')?.value    || '',
+    yt:       c.querySelector('.p-yt')?.value       || '',
+    instr_yt: c.querySelector('.p-instr-yt')?.value || '',
+    pairs:    [...c.querySelectorAll('.pair-group')].map(g => ({
+      point:     g.querySelector('.point-input')?.value     || '',
+      scripture: g.querySelector('.scripture-input')?.value || '',
+    })),
+  }));
+}
+
+function collectSongs(sec) {
+  return [...document.querySelectorAll(`#${sec}-list .song-card`)].map(c => ({
+    id:     c.dataset.id,
+    title:  c.querySelector('.s-title')?.value  || '',
+    yt:     c.querySelector('.s-yt')?.value     || '',
+  }));
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function renderAll(state) {
+  renderPrayer(state.prayer);
+  renderSongs('worship', state.worship);
+  renderSongs('praise',  state.praise);
+  updateHeadings();
+}
+
+function renderPrayer(items) {
+  const el = document.getElementById('prayer-list');
+  el.innerHTML = '';
+  items.forEach((item, i) => el.appendChild(buildPrayerCard(item, i)));
+}
+
+function renderSongs(sec, items) {
+  const el = document.getElementById(`${sec}-list`);
+  el.innerHTML = '';
+  items.forEach((item, i) => el.appendChild(buildSongCard(sec, item, i)));
+}
+
+// ─── PRAYER CARD ─────────────────────────────────────────────────────────────
+function buildPrayerCard(item, idx) {
+  const d = document.createElement('div');
+  d.className = 'card prayer-card';
+  d.dataset.id = item.id;
+
+  const pairs = (item.pairs && item.pairs.length) ? item.pairs : [{point:'',scripture:''}];
+  const pairsHTML = pairs.map((pair,i) => pairRow(pair,i)).join('');
+
+  d.innerHTML = `
+    <button class="del-btn" onclick="deleteCard('prayer','${item.id}')" title="Remove">×</button>
+
+    <!-- Title row -->
+    <div class="p-card-top">
+      <div class="item-num">${idx+1}</div>
+      <div>
+        <div class="field-label">Prayer Section Title</div>
+        <input type="text" class="p-title" placeholder="e.g. Opening Prayer, Intercession…" value="${esc(item.title)}" oninput="scheduleSave()"/>
       </div>
-      <div class="row-bottom">
-        <div>
-          <div class="field-label">YouTube Link</div>
-          <div class="yt-wrap">
-            ${YT_SVG}
-            <input type="url" id="yt-${id}" placeholder="https://www.youtube.com/watch?v=…"/>
-          </div>
-        </div>
-        <div class="instr-box">
-          <div class="field-label">Instrumental</div>
-          <div class="toggle-wrap">
-            <div class="toggle-track" id="track-${id}" onclick="flipToggle('${id}')">
-              <div class="toggle-thumb"></div>
-            </div>
-            <span class="toggle-label" id="tlabel-${id}">No</span>
-          </div>
-        </div>
+    </div>
+
+    <!-- YouTube -->
+    <div style="margin-bottom:10px;">
+      <div class="field-label">YouTube Link</div>
+      <div class="yt-wrap">${YT_SVG}<input type="url" class="p-yt" placeholder="https://www.youtube.com/watch?v=…" value="${esc(item.yt)}" oninput="scheduleSave()"/></div>
+    </div>
+
+    <!-- Instrumental Link -->
+    <div style="margin-bottom:12px;">
+      <div class="field-label">🎸 Instrumental Link <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;font-size:9px;">(played during prayer)</span></div>
+      <div class="yt-wrap">${YT_SVG}<input type="url" class="p-instr-yt" placeholder="https://www.youtube.com/watch?v=… (instrumental)" value="${esc(item.instr_yt||'')}" oninput="scheduleSave()"/></div>
+    </div>
+
+    <!-- Paired Points & Scriptures -->
+    <div class="sub-section">
+      <div class="sub-section-head">
+        <span class="sub-section-label">📌 Points &amp; Scriptures</span>
+        <button class="sub-add-btn" onclick="addPair(this)">+ Add Pair</button>
       </div>
-      <div class="lyrics-toggle-row">
-        <button class="lyrics-toggle-btn" id="lbtn-${id}" onclick="toggleLyrics('${id}')">+ Add Lyrics</button>
-      </div>
-      <div class="lyrics-area" id="lyrics-${id}">
-        <div class="field-label" style="margin-bottom:6px">Lyrics</div>
-        <textarea placeholder="Paste or type lyrics here…&#10;&#10;Verse 1&#10;…&#10;&#10;Chorus&#10;…&#10;&#10;Bridge&#10;…"></textarea>
-      </div>
-    </div>`;
+      <div class="pairs-list">${pairsHTML}</div>
+    </div>
+  `;
+  return d;
+}
+
+function pairRow(pair, idx) {
+  return `<div class="pair-group">
+    <button class="pair-del-btn" onclick="removePair(this)" title="Remove pair">×</button>
+    <div class="pair-row">
+      <div class="pair-inner-label point-lbl">📌 Prayer Point</div>
+      <input type="text" class="point-input" placeholder="Enter prayer point…" value="${esc(pair.point||'')}" oninput="scheduleSave()"/>
+    </div>
+    <div class="pair-row">
+      <div class="pair-inner-label script-lbl">📖 Scripture</div>
+      <input type="text" class="scripture-input" placeholder="e.g. John 3:16 – For God so loved the world…" value="${esc(pair.scripture||'')}" oninput="scheduleSave()"/>
+    </div>
+  </div>`;
+}
+
+function addPair(btn) {
+  const list = btn.closest('.prayer-card').querySelector('.pairs-list');
+  const div = document.createElement('div');
+  div.innerHTML = pairRow({point:'',scripture:''}, list.children.length);
+  list.appendChild(div.firstElementChild);
+  scheduleSave();
+}
+
+function removePair(btn) {
+  const list = btn.closest('.pairs-list');
+  if (list.children.length <= 1) {
+    list.querySelector('.point-input').value = '';
+    list.querySelector('.scripture-input').value = '';
+    scheduleSave();
+    return;
   }
-  el.innerHTML = html;
+  btn.closest('.pair-group').remove();
+  scheduleSave();
 }
 
-function flipToggle(id) {
-  const track = document.getElementById('track-' + id);
-  const label = document.getElementById('tlabel-' + id);
+// ─── SONG CARD ────────────────────────────────────────────────────────────────
+function buildSongCard(sec, item, idx) {
+  const d = document.createElement('div');
+  d.className = 'card song-card';
+  d.dataset.id = item.id;
+  d.innerHTML = `
+    <button class="del-btn" onclick="deleteCard('${sec}','${item.id}')" title="Remove">×</button>
+    <div class="row-top">
+      <div class="item-num">${idx+1}</div>
+      <div>
+        <div class="field-label">Song Title</div>
+        <input type="text" class="s-title" placeholder="Enter song title…" value="${esc(item.title)}" oninput="scheduleSave()" autocomplete="off"/>
+      </div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div class="field-label">YouTube Link</div>
+      <div class="yt-wrap">${YT_SVG}<input type="url" class="s-yt" placeholder="https://www.youtube.com/watch?v=…" value="${esc(item.yt)}" oninput="scheduleSave()"/></div>
+    </div>
+
+  `;
+  return d;
+}
+
+// ─── INTERACTIONS ─────────────────────────────────────────────────────────────
+function flipToggle(track) {
   track.classList.toggle('on');
-  label.textContent = track.classList.contains('on') ? 'Yes' : 'No';
+  track.nextElementSibling.textContent = track.classList.contains('on') ? 'Yes' : 'No';
+  scheduleSave();
 }
 
-function toggleLyrics(id) {
-  const area = document.getElementById('lyrics-' + id);
-  const btn  = document.getElementById('lbtn-' + id);
+function toggleLyricsBtn(btn) {
+  const area = btn.closest('.song-card').querySelector('.lyrics-area');
   area.classList.toggle('open');
   btn.classList.toggle('open');
   btn.textContent = area.classList.contains('open') ? '− Hide Lyrics' : '+ Add Lyrics';
 }
 
 function switchTab(tab) {
-  ['worship','praise','solos'].forEach(t => {
-    document.getElementById('panel-' + t).classList.remove('active');
-    document.getElementById('btn-' + t).className = 'tab-btn';
+  ['prayer','worship','praise'].forEach(t => {
+    document.getElementById('panel-'+t).classList.remove('active');
+    document.getElementById('btn-'+t).className = 'tab-btn';
   });
-  document.getElementById('panel-' + tab).classList.add('active');
-  document.getElementById('btn-' + tab).className = 'tab-btn act-' + tab;
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('btn-'+tab).className = 'tab-btn act-'+tab;
 }
 
-// ── PDF EXPORT ────────────────────────────────────────────────────────────────
-function collectData() {
-  const sections = [
-    { label: 'WORSHIP SONGS — MAY 2026', color: [26,92,56],   containerId: 'worship-rows', count: 4 },
-    { label: 'PRAISE SONGS — MAY 2026',  color: [139,32,32],  containerId: 'praise-rows',  count: 4 },
-    { label: 'SOLOS — MAY 2026',         color: [42,79,138],  containerId: 'solos-rows',   count: 4 },
-  ];
-  return sections.map(sec => {
-    const songs = [];
-    for (let i = 1; i <= sec.count; i++) {
-      const id    = sec.containerId + '-' + i;
-      const title = (document.getElementById('title-' + id)?.value || '').trim();
-      const yt    = (document.getElementById('yt-' + id)?.value    || '').trim();
-      const instr = document.getElementById('track-' + id)?.classList.contains('on');
-      const lyrEl = document.querySelector('#lyrics-' + id + ' textarea');
-      const lyrics = (lyrEl?.value || '').trim();
-      songs.push({ num: i, title, yt, instr, lyrics });
-    }
-    return { label: sec.label, color: sec.color, songs };
-  });
+// ─── ADD / DELETE CARDS ───────────────────────────────────────────────────────
+function addPrayerCard() {
+  const state = collectState();
+  state.prayer.push(makePrayerItem());
+  renderPrayer(state.prayer);
+  saveState();
 }
 
+function addSongCard(sec) {
+  const state = collectState();
+  state[sec].push(makeSongItem());
+  renderSongs(sec, state[sec]);
+  saveState();
+}
+
+function deleteCard(sec, id) {
+  const state = collectState();
+  state[sec] = state[sec].filter(x => x.id !== id);
+  if (sec === 'prayer') renderPrayer(state.prayer);
+  else renderSongs(sec, state[sec]);
+  saveState();
+  reNumber(sec);
+}
+
+function reNumber(sec) {
+  document.querySelectorAll(`#${sec}-list .item-num`).forEach((el,i) => el.textContent = i+1);
+}
+
+// ─── MONTH CHANGE ─────────────────────────────────────────────────────────────
+function changeMonth() {
+  saveState();               // save current month first
+  const state = loadState(); // load new month (or fresh default)
+  renderAll(state);
+}
+
+function updateHeadings() {
+  const m = currentMonth();
+  const y = new Date().getFullYear();
+  document.getElementById('prayer-heading').textContent  = `Prayer — ${m} ${y}`;
+  document.getElementById('worship-heading').textContent = `Worship Songs — ${m} ${y}`;
+  document.getElementById('praise-heading').textContent  = `Praise Songs — ${m} ${y}`;
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function uid() { return '_'+Math.random().toString(36).substr(2,9); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── PDF EXPORT ───────────────────────────────────────────────────────────────
 async function exportPDF() {
   const btn = document.getElementById('exportBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Generating…';
+  btn.disabled = true; btn.textContent = '⏳ Building…';
 
   try {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const PW = 210, PH = 297, ML = 16, MR = 16;
-    const CW = PW - ML - MR;
-    let y = 0;
+    const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const PW=210,PH=297,ML=15,MR=15,CW=PW-ML-MR;
+    let y=0;
 
-    function needSpace(h) {
-      if (y + h > PH - 16) {
-        doc.addPage();
-        y = 20;
-      }
-    }
+    const COLS = {
+      prayer:  {r:[122,79,0],   bg:[245,230,200], bd:[212,170,112]},
+      worship: {r:[26,92,56],   bg:[200,228,208], bd:[142,200,168]},
+      praise:  {r:[139,32,32],  bg:[232,206,206], bd:[192,152,152]},
+    };
 
-    // ── Gold header (every page gets it via template — we do page 1 manually)
-    function drawHeader() {
-      // gradient simulation: three rects
-      doc.setFillColor(107, 79, 10);  doc.rect(0, 0, PW, 38, 'F');
-      doc.setFillColor(154, 112, 16); doc.rect(PW*0.12, 0, PW*0.76, 38, 'F');
-      doc.setFillColor(196, 154, 20); doc.rect(PW*0.25, 0, PW*0.5, 38, 'F');
-      // bottom line
-      doc.setFillColor(240, 200, 64); doc.rect(0, 37, PW, 1.5, 'F');
-      // Church name
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
-      doc.setTextColor(255, 248, 231);
-      doc.text('Go Ye Amsterdam', PW/2, 16, { align: 'center' });
-      // Subtitle
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5);
-      doc.setTextColor(255, 240, 190);
-      doc.text('WORSHIP DEPARTMENT  ·  SONG DATABASE', PW/2, 23, { align: 'center' });
-      // Month pill bg
-      doc.setFillColor(0, 0, 0); doc.setGState(doc.GState({ opacity: 0.28 }));
-      doc.roundedRect(PW/2 - 18, 27, 36, 8, 4, 4, 'F');
-      doc.setGState(doc.GState({ opacity: 1 }));
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
-      doc.setTextColor(255, 240, 190);
-      doc.text('MAY 2026', PW/2, 32.5, { align: 'center' });
-      y = 48;
+    function needY(h){ if(y+h>PH-14){doc.addPage();y=20;} }
+
+    function drawHeader(){
+      doc.setFillColor(107,79,10);  doc.rect(0,0,PW,36,'F');
+      doc.setFillColor(154,112,16); doc.rect(PW*0.12,0,PW*0.76,36,'F');
+      doc.setFillColor(196,154,20); doc.rect(PW*0.28,0,PW*0.44,36,'F');
+      doc.setFillColor(240,200,64); doc.rect(0,35.5,PW,1.5,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(255,248,231);
+      doc.text('Go Ye Amsterdam',PW/2,15,{align:'center'});
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(255,240,190);
+      doc.text('WORSHIP DEPARTMENT  ·  SONG DATABASE',PW/2,22,{align:'center'});
+      doc.setFillColor(30,20,0);
+      doc.roundedRect(PW/2-20,26,40,8,4,4,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(255,240,190);
+      const mon = currentMonth().toUpperCase();
+      doc.text(`${mon} ${new Date().getFullYear()}`,PW/2,31.5,{align:'center'});
+      y=46;
     }
 
     drawHeader();
+    const state = collectState();
 
-    const data = collectData();
+    const sections = [
+      {key:'prayer',  label:'PRAYER',        items:state.prayer},
+      {key:'worship', label:'WORSHIP SONGS', items:state.worship},
+      {key:'praise',  label:'PRAISE SONGS',  items:state.praise},
+    ];
 
-    data.forEach((section, si) => {
-      // Section break — new page after worship
-      if (si > 0) { doc.addPage(); drawHeader(); }
+    sections.forEach((sec,si)=>{
+      if(si>0){doc.addPage();drawHeader();}
+      const C=COLS[sec.key]; const[r,g,b]=C.r;
 
-      const [r,g,b] = section.color;
+      // Section strip
+      doc.setFillColor(...C.bg);
+      doc.roundedRect(ML,y,CW,11,2,2,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(r,g,b);
+      doc.text(`${sec.label}  —  ${currentMonth().toUpperCase()} ${new Date().getFullYear()}`,ML+5,y+7.8);
+      y+=16;
 
-      // Section heading
-      needSpace(14);
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-      doc.setTextColor(r, g, b);
-      doc.text(section.label, ML, y);
-      doc.setDrawColor(r, g, b); doc.setLineWidth(0.5);
-      doc.line(ML, y+2, PW-MR, y+2);
-      y += 10;
+      sec.items.forEach((item,idx)=>{
+        const isPrayer = sec.key==='prayer';
 
-      section.songs.forEach(song => {
         // Estimate card height
-        const hasLyrics = song.lyrics.length > 0;
-        const lyrLines = hasLyrics ? doc.splitTextToSize(song.lyrics, CW - 8).length : 0;
-        const cardH = 10 + 8 + (song.yt ? 7 : 6) + (hasLyrics ? 5 + lyrLines * 5 : 0) + 6;
+        let estH = 18; // title row
+        if(item.yt) estH+=7;
+        if(isPrayer){
+          estH += (item.points||[]).filter(p=>p).length*5.5+8;
+          estH += (item.scriptures||[]).filter(s=>s).length*5.5+8;
+        } else {
+          if(item.lyrics) estH += doc.splitTextToSize(item.lyrics,CW-12).length*5+8;
+        }
+        estH = Math.max(estH,22);
 
-        needSpace(cardH + 4);
-        const cardY = y;
+        needY(estH+6);
+        const cy=y;
 
-        // Card background
-        doc.setFillColor(250, 250, 247);
-        doc.setDrawColor(200, 194, 180); doc.setLineWidth(0.3);
-        doc.roundedRect(ML, cardY, CW, cardH, 2.5, 2.5, 'FD');
+        // Card box - draw after content; just init y tracking
+        let cx = cy+10;
 
         // Number circle
-        doc.setFillColor(r, g, b);
-        doc.circle(ML + 6, cardY + 7, 4.8, 'F');
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(9);
-        doc.setTextColor(255, 255, 255);
-        doc.text(String(song.num), ML + 6, cardY + 9, { align: 'center' });
+        doc.setFillColor(r,g,b); doc.circle(ML+6,cy+7,4.5,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(255,255,255);
+        doc.text(String(idx+1),ML+6,cy+9.2,{align:'center'});
 
-        // Song title
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-        doc.setTextColor(26, 26, 26);
-        const title = song.title || '(No title entered)';
-        doc.text(title, ML + 14, cardY + 9);
+        // Title
+        doc.setFont('helvetica','bold'); doc.setFontSize(11.5); doc.setTextColor(26,26,26);
+        doc.text(item.title||'(No title entered)',ML+14,cx);
+        cx+=8;
 
-        // Instrumental badge (right aligned)
-        const instrLabel = song.instr ? 'Instrumental: YES' : 'Instrumental: NO';
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
-        doc.setTextColor(song.instr ? r : 120, song.instr ? g : 112, song.instr ? b : 100);
-        doc.text(instrLabel, PW - MR - 2, cardY + 9, { align: 'right' });
+        // YouTube
+        if(item.yt){
+          doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(200,0,0);
+          doc.text('▶',ML+5,cx);
+          doc.setFont('helvetica','normal'); doc.setTextColor(40,80,180);
+          const ytD = item.yt.length>64?item.yt.substring(0,61)+'…':item.yt;
+          doc.textWithLink(ytD,ML+11,cx,{url:item.yt});
+          const lw=doc.getTextWidth(ytD);
+          doc.setDrawColor(40,80,180); doc.setLineWidth(0.2);
+          doc.line(ML+11,cx+0.9,ML+11+lw,cx+0.9);
+          cx+=8;
+        }
 
-        let cy = cardY + 16;
+        // Instrumental link
+        if(isPrayer && item.instr_yt){
+          doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(r,g,b);
+          doc.text('🎸 Instrumental:',ML+5,cx);
+          const labelW = doc.getTextWidth('🎸 Instrumental: ');
+          doc.setFont('helvetica','normal'); doc.setTextColor(40,80,180);
+          const instrD = item.instr_yt.length>58?item.instr_yt.substring(0,55)+'…':item.instr_yt;
+          doc.textWithLink(instrD, ML+5+labelW, cx, {url:item.instr_yt});
+          const ilw = doc.getTextWidth(instrD);
+          doc.setDrawColor(40,80,180); doc.setLineWidth(0.2);
+          doc.line(ML+5+labelW, cx+0.9, ML+5+labelW+ilw, cx+0.9);
+          cx+=8;
+        }
 
-        // YouTube link — CLICKABLE
-        if (song.yt) {
-          // Red YT label
-          doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
-          doc.setTextColor(220, 0, 0);
-          doc.text('▶ YouTube:', ML + 3, cy);
-          // Blue clickable link
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(40, 80, 180);
-          const ytDisplay = song.yt.length > 60 ? song.yt.substring(0, 57) + '…' : song.yt;
-          // textWithLink makes it a real clickable hyperlink in the PDF
-          doc.textWithLink(ytDisplay, ML + 28, cy, { url: song.yt });
-          // Underline the link
-          const linkW = doc.getTextWidth(ytDisplay);
-          doc.setDrawColor(40, 80, 180); doc.setLineWidth(0.2);
-          doc.line(ML + 28, cy + 0.8, ML + 28 + linkW, cy + 0.8);
-          cy += 7;
+        if(isPrayer){
+          // Paired points & scriptures
+          const pairs = (item.pairs||[]).filter(p=>p.point||p.scripture);
+          if(pairs.length){
+            pairs.forEach((pair,pi)=>{
+              needY(14);
+              // pair number
+              doc.setFillColor(r,g,b);
+              doc.circle(ML+8, cx+1.5, 3, 'F');
+              doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(255,255,255);
+              doc.text(String(pi+1), ML+8, cx+3, {align:'center'});
+              cx+=2;
+              if(pair.point){
+                doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(r,g,b);
+                doc.text('POINT', ML+14, cx);
+                doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(40,30,10);
+                const ptLines = doc.splitTextToSize(pair.point, CW-22);
+                ptLines.forEach(l=>{ doc.text(l, ML+14, cx+4); cx+=4.8; });
+                cx+=2;
+              }
+              if(pair.scripture){
+                doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(74,96,144);
+                doc.text('SCRIPTURE', ML+14, cx);
+                doc.setFont('helvetica','italic'); doc.setFontSize(9); doc.setTextColor(74,96,144);
+                const scLines = doc.splitTextToSize(pair.scripture, CW-22);
+                scLines.forEach(l=>{ doc.text(l, ML+14, cx+4); cx+=4.8; });
+                cx+=4;
+              }
+            });
+          }
         } else {
-          doc.setFont('helvetica', 'italic'); doc.setFontSize(8);
-          doc.setTextColor(180, 170, 155);
-          doc.text('No YouTube link added', ML + 3, cy);
-          cy += 6;
+
         }
 
-        // Lyrics
-        if (hasLyrics) {
-          doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
-          doc.setTextColor(r, g, b);
-          doc.text('LYRICS', ML + 3, cy);
-          cy += 4;
-          doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
-          doc.setTextColor(50, 50, 50);
-          const lines = doc.splitTextToSize(song.lyrics, CW - 8);
-          lines.forEach(line => {
-            if (cy > PH - 20) { doc.addPage(); drawHeader(); cy = y; }
-            doc.text(line, ML + 3, cy);
-            cy += 4.8;
-          });
-        }
+        // Card border
+        doc.setFillColor(...C.bg.map(v=>Math.min(255,v+15)));
+        doc.setDrawColor(...C.bd); doc.setLineWidth(0.35);
+        doc.roundedRect(ML,cy,CW,cx-cy+4,2.5,2.5,'SD');
 
-        y = cy + 8;
+        y=cx+8;
       });
     });
 
-    // Footer on every page
-    const total = doc.internal.getNumberOfPages();
-    for (let p = 1; p <= total; p++) {
+    // Footers
+    const total=doc.internal.getNumberOfPages();
+    for(let p=1;p<=total;p++){
       doc.setPage(p);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5);
-      doc.setTextColor(180, 170, 155);
-      doc.text('© 2026 Go Ye Amsterdam — Worship List', ML, PH - 7);
-      doc.text('Page ' + p + ' / ' + total, PW - MR, PH - 7, { align: 'right' });
-      doc.setDrawColor(210, 200, 185); doc.setLineWidth(0.3);
-      doc.line(ML, PH - 10, PW - MR, PH - 10);
+      doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(180,170,155);
+      doc.text('© 2026 Go Ye Amsterdam — Worship List',ML,PH-7);
+      doc.text(`Page ${p} / ${total}`,PW-MR,PH-7,{align:'right'});
+      doc.setDrawColor(210,200,185); doc.setLineWidth(0.3);
+      doc.line(ML,PH-10,PW-MR,PH-10);
     }
 
-    doc.save('GoYeAmsterdam_WorshipList_May2026.pdf');
+    const mon = currentMonth();
+    doc.save(`GoYeAmsterdam_WorshipList_${mon}${new Date().getFullYear()}.pdf`);
 
-  } catch (err) {
-    alert('PDF export failed: ' + err.message + '\n\nMake sure you are connected to the internet (jsPDF library needs to load).');
-  }
+  } catch(err){ alert('Export failed: '+err.message); }
 
-  btn.disabled = false;
-  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg> Export as PDF`;
+  btn.disabled=false;
+  btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg> Export PDF`;
 }
 
-buildRows(4, 'worship-rows');
-buildRows(4, 'praise-rows');
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+const sel = document.getElementById('monthSelect');
+// Restore last used month
+const savedMonth = localStorage.getItem('goye_current_month');
+if(savedMonth){ [...sel.options].forEach(o=>{ if(o.value===savedMonth) o.selected=true; }); }
+// On change: save old month data, load new month data, re-render everything
+sel.addEventListener('change', () => {
+  saveState();
+  localStorage.setItem('goye_current_month', currentMonth());
+  renderAll(loadState());
+});
+renderAll(loadState());
 </script>
 </body>
 </html>
