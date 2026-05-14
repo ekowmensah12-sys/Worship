@@ -105,6 +105,10 @@
     .sub-items{display:flex;flex-direction:column;gap:6px;}
     /* Paired point+scripture */
     .pairs-list{display:flex;flex-direction:column;gap:10px;}
+    .music-list{display:flex;flex-direction:column;gap:6px;}
+    .music-item{display:flex;align-items:center;gap:8px;position:relative;}
+    .music-item input{flex:1;}
+    .music-item .yt-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:17px;height:17px;pointer-events:none;}
     .pair-group{background:#F5F0E6;border:1px solid #DDD5C0;border-radius:8px;padding:10px 12px;position:relative;}
     .pair-del-btn{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;border:1px solid #DDD;background:#F5F0E8;color:#bbb;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
     .pair-del-btn:hover{background:#ffe0e0;border-color:#f0aaaa;color:#cc3333;}
@@ -231,6 +235,7 @@
 
 <script>
 // ─── ICONS ────────────────────────────────────────────────────────────────────
+const YT_SVG_INLINE = '<svg class="yt-icon" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>';
 const YT_SVG = `<svg class="yt-icon" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>`;
 
 // ─── STORAGE KEY ──────────────────────────────────────────────────────────────
@@ -251,7 +256,7 @@ function makeDefaultState() {
 }
 
 function makePrayerItem() {
-  return { id:uid(), title:'', yt:'', instr_yt:'', pairs:[{point:'',scripture:''}] };
+  return { id:uid(), title:'', yt:'', music:[''], pairs:[{point:'',scripture:''}] };
 }
 function makeSongItem() {
   return { id:uid(), title:'', yt:'' };
@@ -290,7 +295,7 @@ function collectPrayer() {
     id:       c.dataset.id,
     title:    c.querySelector('.p-title')?.value    || '',
     yt:       c.querySelector('.p-yt')?.value       || '',
-    instr_yt: c.querySelector('.p-instr-yt')?.value || '',
+    music:    [...c.querySelectorAll('.music-input')].map(i => i.value),
     pairs:    [...c.querySelectorAll('.pair-group')].map(g => ({
       point:     g.querySelector('.point-input')?.value     || '',
       scripture: g.querySelector('.scripture-input')?.value || '',
@@ -334,6 +339,8 @@ function buildPrayerCard(item, idx) {
 
   const pairs = (item.pairs && item.pairs.length) ? item.pairs : [{point:'',scripture:''}];
   const pairsHTML = pairs.map((pair,i) => pairRow(pair,i)).join('');
+  const musicList = (item.music && item.music.length) ? item.music : [''];
+  const musicHTML = musicList.map((m,i) => musicRow(m,i)).join('');
 
   d.innerHTML = `
     <button class="del-btn" onclick="deleteCard('prayer','${item.id}')" title="Remove">×</button>
@@ -353,10 +360,13 @@ function buildPrayerCard(item, idx) {
       <div class="yt-wrap">${YT_SVG}<input type="url" class="p-yt" placeholder="https://www.youtube.com/watch?v=…" value="${esc(item.yt)}" oninput="scheduleSave()"/></div>
     </div>
 
-    <!-- Instrumental Link -->
-    <div style="margin-bottom:12px;">
-      <div class="field-label">🎸 Instrumental Link <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;font-size:9px;">(played during prayer)</span></div>
-      <div class="yt-wrap">${YT_SVG}<input type="url" class="p-instr-yt" placeholder="https://www.youtube.com/watch?v=… (instrumental)" value="${esc(item.instr_yt||'')}" oninput="scheduleSave()"/></div>
+    <!-- Prayer Music list -->
+    <div class="sub-section" style="margin-bottom:12px;">
+      <div class="sub-section-head">
+        <span class="sub-section-label">🎵 Prayer Music</span>
+        <button class="sub-add-btn" onclick="addMusic(this)">+ Add Music</button>
+      </div>
+      <div class="music-list">${musicHTML}</div>
     </div>
 
     <!-- Paired Points & Scriptures -->
@@ -383,6 +393,33 @@ function pairRow(pair, idx) {
       <input type="text" class="scripture-input" placeholder="e.g. John 3:16 – For God so loved the world…" value="${esc(pair.scripture||'')}" oninput="scheduleSave()"/>
     </div>
   </div>`;
+}
+
+function musicRow(url, idx) {
+  return `<div class="sub-item music-item">
+    ${YT_SVG_INLINE}
+    <input type="url" class="music-input" placeholder="https://www.youtube.com/watch?v=… (prayer music)" value="${esc(url||'')}" oninput="scheduleSave()" style="padding-left:32px;"/>
+    <button class="sub-del-btn" onclick="removeMusic(this)" title="Remove">×</button>
+  </div>`;
+}
+
+function addMusic(btn) {
+  const list = btn.closest('.prayer-card').querySelector('.music-list');
+  const div = document.createElement('div');
+  div.innerHTML = musicRow('', list.children.length);
+  list.appendChild(div.firstElementChild);
+  scheduleSave();
+}
+
+function removeMusic(btn) {
+  const list = btn.closest('.music-list');
+  if (list.children.length <= 1) {
+    list.querySelector('.music-input').value = '';
+    scheduleSave();
+    return;
+  }
+  btn.closest('.music-item').remove();
+  scheduleSave();
 }
 
 function addPair(btn) {
@@ -600,7 +637,7 @@ async function exportPDF() {
         // Instrumental link
         if(isPrayer && item.instr_yt){
           doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(r,g,b);
-          doc.text('🎸 Instrumental:',ML+5,cx);
+          doc.text('🎵 Prayer Music:',ML+5,cx);
           const labelW = doc.getTextWidth('🎸 Instrumental: ');
           doc.setFont('helvetica','normal'); doc.setTextColor(40,80,180);
           const instrD = item.instr_yt.length>58?item.instr_yt.substring(0,55)+'…':item.instr_yt;
